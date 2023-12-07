@@ -1,0 +1,37 @@
+#include <DHT.h>
+
+#define DHTPIN A0     // El pin al que está conectado el sensor DHT11
+#define DHTTYPE DHT11  
+
+DHT dht(DHTPIN, DHTTYPE);
+
+String msg1 = "\nTemperatura alta\n";
+String msg2 = "\nTemperatura baja\n";
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  delay(2000);  // Espera 2 segundos entre lecturas
+
+  float temp = dht.readTemperature(); // Lee la temperatura en grados Celsius
+
+  if (isnan(temp)) {
+    Serial.println("Error al leer el sensor");
+    return;
+  }
+
+  // Envia el dato al puerto serial
+  if (temp >= 25) {
+    Serial.print(msg1);
+    Serial.print(temp);
+  } else if (temp < 25) {
+    Serial.print(msg2);
+    Serial.print(temp);
+  }
+  Serial.print(" °C\n");
+
+  delay(5000);
+}
